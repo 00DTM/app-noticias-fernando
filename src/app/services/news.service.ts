@@ -16,7 +16,7 @@ export class NewsService {
 
   getTopHeadlines(): Observable<Article[]>{
     
-    return this.http.get<NewsResponse>(`https://newsapi.org/v2/everything?q=tesla&from=2023-04-18&sortBy=published`,{
+    return this.http.get<NewsResponse>(`https://newsapi.org/v2/top-headlines?country=us`,{
       params: {
         apiKey: apiKey
       }
