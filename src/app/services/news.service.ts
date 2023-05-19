@@ -15,15 +15,17 @@ export class NewsService {
   constructor( private http: HttpClient) { }
 
   getTopHeadlines(): Observable<Article[]>{
-    
-    return this.http.get<NewsResponse>(`https://newsapi.org/v2/top-headlines?country=us`,{
-      params: {
+    // Hace una solicitud HTTP GET para obtener los titulares principales de las noticias
+    // utilizando la URL 'https://newsapi.org/v2/top-headlines?country=us'
+     return this.http.get<NewsResponse>(`https://newsapi.org/v2/top-headlines?country=us`,{
+     // Especifica el parámetro apiKey en la solicitud HTTP 
+     params: {
         apiKey: apiKey
       }
     }).pipe(
+      // Utiliza el operador 'map' para extraer y devolver solo el array de artículos de la respuesta
       map( ({articles}) => articles)
     );
-
   }
 
   getTopHeadlinesByCategory(category: string):Observable<Article[]>{
