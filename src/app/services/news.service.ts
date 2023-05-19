@@ -1,41 +1,71 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Article, NewsResponse } from '../interfaces';
+import { Article, NewsResponse, articlesByCategoryAndPage } from '../interfaces';
 import { Observable } from 'rxjs';
-import {map} from 'rxjs/operators'
+import { map } from 'rxjs/operators'
 
 const apiKey = environment.apiKey;
+const apiUrl = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
 
-  constructor( private http: HttpClient) { }
 
-  getTopHeadlines(): Observable<Article[]>{
-    // Hace una solicitud HTTP GET para obtener los titulares principales de las noticias
-    // utilizando la URL 'https://newsapi.org/v2/top-headlines?country=us'
-     return this.http.get<NewsResponse>(`https://newsapi.org/v2/top-headlines?country=us`,{
-     // Especifica el parámetro apiKey en la solicitud HTTP 
-     params: {
-        apiKey: apiKey
+
+  constructor(private http: HttpClient) { }
+
+  private executeQuery<T>( endpoint: string ) {
+    console.log('Petición HTTP realizada');
+    return this.http.get<T>(`${ apiUrl }${ endpoint }`, {
+      params: {
+        apiKey:apiKey,
+        country: 'us',
       }
-    }).pipe(
-      // Utiliza el operador 'map' para extraer y devolver solo el array de artículos de la respuesta
-      map( ({articles}) => articles)
-    );
+    });
+   }
+
+  private articlesByCategoryAndPage: articlesByCategoryAndPage = {
+
   }
 
-  getTopHeadlinesByCategory(category: string):Observable<Article[]>{
-    return this.http.get<NewsResponse>(`https://newsapi.org/v2/top-headlines?country=us&category=${category}`,{
-      params: {
-        apiKey: apiKey
+  getTopHeadlines():Observable<Article[]>{
+ 
+    return this.executeQuery<NewsResponse>(`/top-headlines?category=business`)
+    .pipe(
+     map(({articles}) => articles)
+     );
+    }
+   
+
+   
+    getTopHeadlinesByCategory(category:string, loadMore:boolean = false):Observable<Article[]>{
+  return this.executeQuery<NewsResponse>(`/top-headlines?category=${category}`)
+    .pipe(
+    map(({articles}) => articles)
+   );
+    }
+
+  private getArticlesByCategory(category: string): Observable<Article[]> {
+    if (Object.keys(this.articlesByCategoryAndPage).includes(category)) {
+      //Ya existe
+      //this.articlesByCategoryAndPage[category].page += 1;
+    } else {
+      this.articlesByCategoryAndPage[category] = {
+        page: 0,
+        articles: []
       }
-    }).pipe(
-      map( ({articles}) => articles)
-    );
+    }
+
+    const page = this.articlesByCategoryAndPage[category].page + 1;
+
+    return this.executeQuery<NewsResponse>(`/top-headlines?category=${category}$page=${page}`)
+      .pipe(
+        map(({ articles }) => articles)
+      );
+
   }
 
 }
