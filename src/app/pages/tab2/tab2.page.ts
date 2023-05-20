@@ -10,7 +10,7 @@ import { NewsService } from 'src/app/services/news.service';
 })
 export class Tab2Page implements OnInit {
 
-  @ViewChild(IonInfiniteScroll) infiniteScrill: IonInfiniteScroll; 
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll; 
 
   public categories: string[] = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
 
@@ -40,13 +40,13 @@ export class Tab2Page implements OnInit {
       .subscribe(articles => {
 
         if (articles.length === this.articles.length){
-          this.infiniteScrill.disabled = true;
+          this.infiniteScroll.disabled = true;
 
           return;
         }
 
         this.articles = articles;
-        this.infiniteScrill.complete();
+        this.infiniteScroll.complete();
       })
   }
 
