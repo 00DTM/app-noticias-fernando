@@ -21,7 +21,7 @@ export interface Source {
 }
 
 
-export interface articlesByCategoryAndPage{
+export interface ArticlesByCategoryAndPage{
     [key: string]: {
         page: number,
         articles: Article[]

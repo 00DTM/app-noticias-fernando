@@ -20,7 +20,7 @@ export class Tab2Page implements OnInit {
   ngOnInit() {
     this.newsService.getTopHeadlinesByCategory(this.selectedCategory)
       .subscribe(articles => {
-        this.articles = articles; //Asigna los articulos de la categoria
+        this.articles = [...articles];
   });
 }
 
@@ -28,7 +28,7 @@ export class Tab2Page implements OnInit {
     this.selectedCategory = event.detail.value; // Asigna el valor seleccionado del segmento a la variable selectedCategory
     this.newsService.getTopHeadlinesByCategory(this.selectedCategory) // Llama al servicio para obtener los artículos principales de la categoría seleccionada
       .subscribe(articles => {
-        this.articles = articles; //Asigna los articulos de la categoria
+        this.articles = [...articles]; 
   });
 
   }
